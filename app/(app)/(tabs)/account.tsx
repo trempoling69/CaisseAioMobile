@@ -5,15 +5,19 @@ import { ThemedText } from '@/components/themedElements/ThemedText';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet } from 'react-native';
+import { useAuthContext } from '@/context/AuthContext';
 
 export default function Account() {
   const { t } = useTranslation();
+  const { currentUser } = useAuthContext();
   const methods = useForm();
   const user = {
-    firstname: 'John',
-    lastname: 'Doe',
-    email: 'email@exemple.com',
-    phone: '0606060606',
+    ...{
+      firstname: 'John',
+      lastname: 'Doe',
+      email: 'email@exemple.com',
+      phone: 'N/A',
+    }, ...(currentUser ?? {}),
   };
   return (
     <ThemedScrollView contentContainerStyle={styles.container}>

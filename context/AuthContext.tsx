@@ -1,10 +1,4 @@
-import {
-  ReactNode,
-  createContext,
-  useCallback,
-  useContext,
-  useState,
-} from 'react';
+import { createContext, ReactNode, useCallback, useContext, useState } from 'react';
 import axios from 'axios';
 import { User } from '@/type/user';
 import { API_URL, get } from '@/api/config';
@@ -14,9 +8,9 @@ type AuthContext = {
   verifyLogin: () => Promise<void>;
   isLoggedIn: boolean | null;
   login: ({
-    email,
-    password,
-  }: {
+            email,
+            password,
+          }: {
     email: string;
     password: string;
   }) => Promise<void>;
@@ -63,23 +57,23 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const login = async ({
-    email,
-    password,
-  }: {
+                         email,
+                         password,
+                       }: {
     email: string;
     password: string;
   }) => {
     try {
       clearError();
       const respLogin = await axios.post(
-        `${API_URL}/api/authentification/login`,
+        `${API_URL}/api/auth/login/credentials`,
         {
           email,
           password,
         },
         { withCredentials: true },
       );
-      const token = respLogin.data.data.access_token;
+      const token = respLogin.data.data.token;
       await SecureStore.setItemAsync('token', token);
       await verifyLogin();
       /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -99,11 +93,11 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       clearError();
       const respLogin = await axios.post(
-        `${API_URL}/api/authentification/register`,
+        `${API_URL}/api/auth/register`,
         credentails,
         { withCredentials: true },
       );
-      const token = respLogin.data.data.access_token;
+      const token = respLogin.data.data.token;
       await SecureStore.setItemAsync('token', token);
       await verifyLogin();
       /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -116,20 +110,22 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logOut = async () => {
-    await axios.post(
-      `${API_URL}/api/authentification/refresh/clear`,
-      {},
-      { withCredentials: true },
-    );
+    // await axios.post(
+    //   `${API_URL}/api/auth/refresh/clear`,
+    //   {},
+    //   { withCredentials: true },
+    // );
     SecureStore.deleteItemAsync('token');
     setIsLoggedIn(false);
   };
 
   const getCurrentUser = async () => {
-    const requestUser = await get<User>('/api/users/me');
+    const requestUser = await get<User>('/api/auth/me');
     setCurrentUser(requestUser.data);
     setIsLoggedIn(true);
   };
+
+  // logOut()
   return (
     <AuthContext.Provider
       value={{

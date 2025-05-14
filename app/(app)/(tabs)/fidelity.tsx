@@ -4,12 +4,17 @@ import { ThemedText } from '@/components/themedElements/ThemedText';
 import { ThemedView } from '@/components/themedElements/ThemedView';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet } from 'react-native';
+import { useAuthContext } from '@/context/AuthContext';
+
 
 export default function Fidelity() {
   const { t } = useTranslation();
+
+  const { currentUser } = useAuthContext();
+
   const user = {
-    name: 'John Doe',
-    cardNumber: '1234 5678 9012 3456',
+    name: currentUser?.lastname + ' ' + currentUser?.firstname,
+    cardNumber: currentUser?.code ?? '-',
     points: 120,
   };
   return (
@@ -17,7 +22,10 @@ export default function Fidelity() {
       <ThemedText type="subtitle" style={styles.title}>
         {t('pages.fidelity.title')}
       </ThemedText>
-      <FidelityCard name={user.name} cardNumber={user.cardNumber} />
+      {currentUser?.clients.map((client) => (
+
+        <FidelityCard key={client.code} name={user.name} shop={client.name} cardNumber={client.code} />
+      ))}
       <ThemedText type="subtitle" style={styles.title}>
         {t('pages.fidelity.points')}
       </ThemedText>

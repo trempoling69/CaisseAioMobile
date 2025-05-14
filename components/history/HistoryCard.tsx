@@ -3,26 +3,29 @@ import { ThemedText } from '../themedElements/ThemedText';
 import { ThemedView } from '../themedElements/ThemedView';
 import ThemedPressable from '../themedElements/ThemedPressable';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useRouter } from 'expo-router';
+
 type OfferCardProps = {
+  id: string;
   shop: string;
   date: string;
   articleQuantity: number;
   value: string;
 };
 const HistoryCard = ({
-  shop,
-  date,
-  value,
-  articleQuantity,
-}: OfferCardProps) => {
+                       id,
+                       shop,
+                       date,
+                       value,
+                       articleQuantity,
+                     }: OfferCardProps) => {
   const backgroundColor = useThemeColor({}, 'freshBrown');
+  const router = useRouter();
   const { t } = useTranslation();
-  const [isCodeVisible, setIsCodeVisible] = useState(false);
 
   const handlePress = () => {
-    setIsCodeVisible(!isCodeVisible);
+    router.push(`/sales/${id}`);
   };
   return (
     <ThemedView style={[styles.container, { backgroundColor }]}>
@@ -39,7 +42,7 @@ const HistoryCard = ({
         style={styles.offerButton}
         onPress={handlePress}
       >
-        <ThemedText textColor="white">{t("pages.history.seeTickets")}</ThemedText>
+        <ThemedText textColor="white">{t('pages.history.seeTickets')}</ThemedText>
       </ThemedPressable>
     </ThemedView>
   );

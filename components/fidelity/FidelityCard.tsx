@@ -6,8 +6,9 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 type Props = {
   name: string;
   cardNumber: string;
+  shop: string;
 };
-const FidelityCard = ({ name, cardNumber }: Props) => {
+const FidelityCard = ({ name, cardNumber, shop }: Props) => {
   const backgroundColor = useThemeColor({}, 'freshBrown');
   return (
     <ThemedView style={[{ backgroundColor }, styles.container]}>
@@ -16,7 +17,7 @@ const FidelityCard = ({ name, cardNumber }: Props) => {
         <ThemedText>{cardNumber}</ThemedText>
       </ThemedView>
       <ThemedView>
-        <ThemedText>Fidelity Card</ThemedText>
+        <ThemedText>Fidelity Card - {shop}</ThemedText>
       </ThemedView>
     </ThemedView>
   );

@@ -1,12 +1,8 @@
-export const API_URL = 'http://192.168.1.63:3001';
+export const API_URL = 'https://caisse-aio.lab-rey.fr';
 
 import * as SecureStore from 'expo-secure-store';
 import { GenericRequestError, GenericRequestResponse } from '@/type/request';
-import axios, {
-  AxiosResponse,
-  AxiosError,
-  InternalAxiosRequestConfig,
-} from 'axios';
+import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
@@ -149,6 +145,25 @@ const get = async <T>(
   }
 };
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+const getFile = async (
+  url: string,
+  params: any = {},
+): Promise<Blob | undefined> => {
+  try {
+    const response = await axiosInstance.get(url, {
+      params,
+      headers: await requestHeader(),
+      responseType: 'blob', // Indique qu'on attend un fichier (Blob)
+    });
+
+    return response.data; // `data` est déjà un Blob ici
+  } catch (err: any) {
+    handleRequestError(err);
+    return undefined;
+  }
+};
+
 const post = async <T, D>(
   url: string,
   data: D,
@@ -212,4 +227,4 @@ const patch = async <T, D>(
   }
 };
 
-export { get, post, del, put, patch };
+export { get, post, del, put, patch, getFile, requestHeader };
